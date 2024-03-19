@@ -17,7 +17,7 @@ module OpenRouter
 
     DEFAULT_API_VERSION = "v1"
     DEFAULT_REQUEST_TIMEOUT = 120
-    DEFAULT_URI_BASE = 'https://openrouter.ai/api'
+    DEFAULT_URI_BASE = "https://openrouter.ai/api"
 
     def initialize
       @access_token = nil

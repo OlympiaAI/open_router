@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 # frozen_string_literal: true
+
 RSpec.describe OpenRouter do
   it "has a version number" do
     expect(OpenRouter::VERSION).not_to be nil
@@ -18,8 +19,8 @@ RSpec.describe OpenRouter do
     describe "#complete" do
       let(:messages) { [{ role: "user", content: "What is the meaning of life?" }] }
       let(:model) { "openrouter/auto" }
-      let(:providers) { ["provider1", "provider2"] }
-      let(:transforms) { ["transform1", "transform2"] }
+      let(:providers) { %w[provider1 provider2] }
+      let(:transforms) { %w[transform1 transform2] }
       let(:extras) { { max_tokens: 100 } }
       let(:stream) { proc { |response| } }
 
@@ -27,15 +28,15 @@ RSpec.describe OpenRouter do
         expect(client).to receive(:json_post).with(
           path: "/chat/completions",
           parameters: {
-            model: model,
-            messages: messages,
+            model:,
+            messages:,
             provider: { provider: { order: providers } },
-            transforms: transforms,
-            stream: stream,
+            transforms:,
+            stream:,
             max_tokens: 100
           }
         )
-        client.complete(messages, model: model, providers: providers, transforms: transforms, extras: extras, stream: stream)
+        client.complete(messages, model:, providers:, transforms:, extras:, stream:)
       end
     end
 

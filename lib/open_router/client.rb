@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'http'
+require_relative "http"
 
 module OpenRouter
   class Client
@@ -19,7 +19,7 @@ module OpenRouter
     # @param extras [Hash] Optional hash of model-specific parameters to send to the OpenRouter API
     # @param stream [Proc, nil] Optional callable object for streaming
     # @return [Hash] The completion response.
-    def complete(messages, model: 'openrouter/auto', providers: [], transforms: [], extras: {}, stream: nil)
+    def complete(messages, model: "openrouter/auto", providers: [], transforms: [], extras: {}, stream: nil) # rubocop:disable Metrics/ParameterLists
       parameters = { model:, messages: }
       parameters[:provider] = { provider: { order: providers } } if providers.any?
       parameters[:transforms] = transforms if transforms.any?

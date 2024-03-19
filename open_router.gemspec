@@ -19,7 +19,8 @@ Gem::Specification.new do |spec|
 
   spec.files = Dir.chdir(__dir__) do
     `git ls-files -z`.split("\x0").reject do |f|
-      (File.expand_path(f) == __FILE__) || f.end_with?('.gem') || f.start_with?(*%w[bin/ test/ spec/ features/ .git .circleci appveyor])
+      (File.expand_path(f) == __FILE__) || f.end_with?(".gem") || f.start_with?(*%w[bin/ test/ spec/ features/ .git
+                                                                                    .circleci appveyor])
     end
   end
 
