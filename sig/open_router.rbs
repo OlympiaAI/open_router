@@ -1,0 +1,20 @@
+module OpenRouter
+  class Client
+    include OpenRouter::HTTP
+
+    def initialize: () { (OpenRouter::Configuration) -> void } -> void
+
+    def complete: (
+      messages: Array[Hash[Symbol, String]],
+      ?model: String,
+      ?providers: Array[String],
+      ?transforms: Array[String],
+      ?extras: Hash[Symbol, untyped],
+      ?stream: Proc
+    ) -> Hash[String, untyped]
+
+    def models: () -> Array[Hash[String, untyped]]
+
+    def query_generation_stats: (generation_id: String) -> Hash[String, untyped]
+  end
+end
