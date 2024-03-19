@@ -10,7 +10,7 @@ The [OpenRouter API](https://openrouter.ai/docs) is a single unified interface f
 - **Standardized API**: No need to change your code when switching between models or providers. You can even let users choose and pay for their own.
 - **Easy integration**: This Ruby gem provides a simple and intuitive interface to interact with the OpenRouter API, making it effortless to integrate AI capabilities into your Ruby applications.
 
-👬 This Ruby library was originally bootstrapped from the [🤖 OpenRouter](https://github.com/alexrudall/anthropic) gem by Alex Rudall, and subsequently extracted from the codebase of my fast-growing AI startup called [Olympia](https://olympia.chat?utm_source=open_router_gem&utm_medium=github) that lets you add AI-powered consultants to your startup!
+👬 This Ruby library was originally bootstrapped from the [🤖 Anthropic](https://github.com/alexrudall/anthropic) gem by Alex Rudall, and subsequently extracted from the codebase of my fast-growing AI startup called [Olympia](https://olympia.chat?utm_source=open_router_gem&utm_medium=github) that lets you add AI-powered consultants to your startup!
 
 🚢 Need someone to develop AI software for you using modern Ruby on Rails? My other company Magma Labs does exactly that: [magmalabs.io](https://www.magmalabs.io/?utm_source=open_router_gem&utm_medium=github). In fact, we also sell off-the-shelf solutions based on my early work on the field, via a platform called [MagmaChat](https://magmachat.ai?utm_source=open_router_gem&utm_medium=github)
 
