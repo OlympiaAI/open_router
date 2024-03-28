@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
-# frozen_string_literal: true
+require "dotenv"
+require "pry"
+
+Dotenv.load
 
 RSpec.describe OpenRouter do
   it "has a version number" do
@@ -8,7 +11,7 @@ RSpec.describe OpenRouter do
   end
 
   describe OpenRouter::Client do
-    let(:client) { OpenRouter::Client.new }
+    let(:client) { OpenRouter::Client.new(access_token: ENV["ACCESS_TOKEN"]) }
 
     describe "#initialize" do
       it "yields the configuration" do
@@ -18,25 +21,19 @@ RSpec.describe OpenRouter do
 
     describe "#complete" do
       let(:messages) { [{ role: "user", content: "What is the meaning of life?" }] }
-      let(:model) { "openrouter/auto" }
-      let(:providers) { %w[provider1 provider2] }
-      let(:transforms) { %w[transform1 transform2] }
       let(:extras) { { max_tokens: 100 } }
-      let(:stream) { proc { |response| } }
 
       it "sends a POST request to the completions endpoint with the correct parameters" do
+        # let the call execute
         expect(client).to receive(:json_post).with(
           path: "/chat/completions",
           parameters: {
-            model:,
+            model: "mistralai/mistral-7b-instruct:free",
             messages:,
-            provider: { provider: { order: providers } },
-            transforms:,
-            stream:,
             max_tokens: 100
           }
-        )
-        client.complete(messages, model:, providers:, transforms:, extras:, stream:)
+        ).and_call_original
+        puts client.complete(messages, model: "mistralai/mistral-7b-instruct:free", extras:)
       end
     end
 

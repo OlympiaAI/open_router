@@ -25,3 +25,5 @@ jobs:
         bundler-cache: true
     - name: Run the default task
       run: bundle exec rake
+      env:
+        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}

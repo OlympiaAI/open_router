@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require "active_support/core_ext/object/blank"
+require "active_support/core_ext/hash/indifferent_access"
+
 require_relative "http"
 
 module OpenRouter
@@ -9,7 +12,11 @@ module OpenRouter
     include OpenRouter::HTTP
 
     # Initializes the client with optional configurations.
-    def initialize
+    def initialize(access_token: nil, request_timeout: nil, uri_base: nil, extra_headers: {})
+      OpenRouter.configuration.access_token = access_token if access_token
+      OpenRouter.configuration.request_timeout = request_timeout if request_timeout
+      OpenRouter.configuration.uri_base = uri_base if uri_base
+      OpenRouter.configuration.extra_headers = extra_headers if extra_headers.any?
       yield(OpenRouter.configuration) if block_given?
     end
 
@@ -34,12 +41,10 @@ module OpenRouter
       parameters[:stream] = stream if stream
       parameters.merge!(extras)
 
-      puts parameters if Rails.env.local?
-
       json_post(path: "/chat/completions", parameters:).tap do |response|
         raise ServerError, "Empty response from OpenRouter. Might be worth retrying once or twice." if response.blank?
         raise ServerError, response.dig("error", "message") if response.dig("error", "message").present?
-      end
+      end.with_indifferent_access
     end
 
     # Fetches the list of available models from the OpenRouter API.
