@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'http'
+require_relative "http"
 
 module OpenRouter
   class ServerError < StandardError; end
@@ -21,7 +21,7 @@ module OpenRouter
     # @param extras [Hash] Optional hash of model-specific parameters to send to the OpenRouter API
     # @param stream [Proc, nil] Optional callable object for streaming
     # @return [Hash] The completion response.
-    def chat_completion(messages, model: 'openrouter/auto', providers: [], transforms: [], extras: {}, stream: nil)
+    def complete(messages, model: "openrouter/auto", providers: [], transforms: [], extras: {}, stream: nil)
       parameters = { messages: }
       if model.is_a?(String)
         parameters[:model] = model

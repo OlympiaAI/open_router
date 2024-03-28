@@ -94,7 +94,7 @@ puts response["choices"][0]["message"]["content"]
 Pass an array to the `model` parameter to enable [explicit model routing](https://openrouter.ai/docs#model-routing).
 
 ```ruby
-OpenRouter::Client.new.chat_completion(
+OpenRouter::Client.new.complete(
   [
     { role: "system", content: SYSTEM_PROMPT },
     { role: "user", content: "Provide analysis of the data formatted as JSON:" }
