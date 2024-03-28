@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
-require_relative "http"
+require_relative 'http'
 
 module OpenRouter
+  class ServerError < StandardError; end
+
   class Client
     include OpenRouter::HTTP
 
@@ -13,19 +15,31 @@ module OpenRouter
 
     # Performs a chat completion request to the OpenRouter API.
     # @param messages [Array<Hash>] Array of message hashes with role and content, like [{role: "user", content: "What is the meaning of life?"}]
-    # @param model [String] Model identifier, defaults to 'openrouter/auto'
+    # @param model [String|Array] Model identifier, or array of model identifiers if you want to fallback to the next model in case of failure
     # @param providers [Array<String>] Optional array of provider identifiers, ordered by priority
     # @param transforms [Array<String>] Optional array of strings that tell OpenRouter to apply a series of transformations to the prompt before sending it to the model. Transformations are applied in-order
     # @param extras [Hash] Optional hash of model-specific parameters to send to the OpenRouter API
     # @param stream [Proc, nil] Optional callable object for streaming
     # @return [Hash] The completion response.
-    def complete(messages, model: "openrouter/auto", providers: [], transforms: [], extras: {}, stream: nil) # rubocop:disable Metrics/ParameterLists
-      parameters = { model:, messages: }
+    def chat_completion(messages, model: 'openrouter/auto', providers: [], transforms: [], extras: {}, stream: nil)
+      parameters = { messages: }
+      if model.is_a?(String)
+        parameters[:model] = model
+      elsif model.is_a?(Array)
+        parameters[:models] = model
+        parameters[:route] = "fallback"
+      end
       parameters[:provider] = { provider: { order: providers } } if providers.any?
       parameters[:transforms] = transforms if transforms.any?
       parameters[:stream] = stream if stream
       parameters.merge!(extras)
-      json_post(path: "/chat/completions", parameters:)
+
+      puts parameters if Rails.env.local?
+
+      json_post(path: "/chat/completions", parameters:).tap do |response|
+        raise ServerError, "Empty response from OpenRouter. Might be worth retrying once or twice." if response.blank?
+        raise ServerError, response.dig("error", "message") if response.dig("error", "message").present?
+      end
     end
 
     # Fetches the list of available models from the OpenRouter API.

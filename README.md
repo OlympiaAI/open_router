@@ -91,7 +91,27 @@ puts response["choices"][0]["message"]["content"]
 
 ### Models
 
-Fetch the list of available models from the OpenRouter API:
+Pass an array to the `model` parameter to enable [explicit model routing](https://openrouter.ai/docs#model-routing).
+
+```ruby
+OpenRouter::Client.new.chat_completion(
+  [
+    { role: "system", content: SYSTEM_PROMPT },
+    { role: "user", content: "Provide analysis of the data formatted as JSON:" }
+  ],
+  model: [
+    "mistralai/mixtral-8x7b-instruct:nitro",
+    "mistralai/mixtral-8x7b-instruct"
+  ],
+  extras: {
+    response_format: {
+      type: "json_object"
+    }
+  }
+)
+```
+
+[Browse full list of models available](https://openrouter.ai/models) or fetch from the OpenRouter API:
 
 ```ruby
 models = client.models
@@ -109,6 +129,10 @@ stats = client.query_generation_stats(generation_id)
 puts stats
 # => {"id"=>"generation-abcdefg", "object"=>"generation", "created"=>1684195200, "model"=>"openrouter/auto", "usage"=>{"prompt_tokens"=>10, "completion_tokens"=>50, "total_tokens"=>60}, "cost"=>0.0006}
 ```
+
+## Errors
+
+The client will raise an `OpenRouter::ServerError` in the case of an error returned from a completion (or empty response).
 
 ## Contributing
 
