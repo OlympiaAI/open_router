@@ -11,3 +11,9 @@ gem "pry", ">= 0.14"
 gem "rake", "~> 13.0"
 gem "rspec", "~> 3.0"
 gem "rubocop", "~> 1.21"
+
+group :development do
+  gem "solargraph-rails", "~> 0.2.0.pre"
+  gem "sorbet"
+  gem "tapioca", require: false
+end
