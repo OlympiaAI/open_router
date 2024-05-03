@@ -13,24 +13,29 @@ module OpenRouter
 
   class Configuration
     attr_writer :access_token
-    attr_accessor :api_version, :extra_headers, :request_timeout, :uri_base
+    attr_accessor :api_version, :extra_headers, :faraday_config, :log_errors, :request_timeout, :uri_base
 
     DEFAULT_API_VERSION = "v1"
     DEFAULT_REQUEST_TIMEOUT = 120
     DEFAULT_URI_BASE = "https://openrouter.ai/api"
 
     def initialize
-      @access_token = nil
-      @uri_base = DEFAULT_URI_BASE
-      @api_version = DEFAULT_API_VERSION
-      @request_timeout = DEFAULT_REQUEST_TIMEOUT
-      @extra_headers = {}
+      self.access_token = nil
+      self.api_version = DEFAULT_API_VERSION
+      self.extra_headers = {}
+      self.log_errors = false
+      self.request_timeout = DEFAULT_REQUEST_TIMEOUT
+      self.uri_base = DEFAULT_URI_BASE
     end
 
     def access_token
       return @access_token if @access_token
 
       raise ConfigurationError, "OpenRouter access token missing!"
+    end
+
+    def faraday(&block)
+      self.faraday_config = block
     end
 
     def site_name=(value)

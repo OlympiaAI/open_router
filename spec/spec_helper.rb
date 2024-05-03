@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
+require "dotenv"
 require "open_router"
+require "pry"
+
+Dotenv.load
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

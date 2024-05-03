@@ -3,13 +3,13 @@
 module OpenRouter
   module HTTP
     def get(path:)
-      to_json(conn.get(uri(path:)) do |req|
+      conn.get(uri(path:)) do |req|
         req.headers = headers
-      end&.body)
+      end&.body
     end
 
-    def json_post(path:, parameters:)
-      to_json(conn.post(uri(path:)) do |req|
+    def post(path:, parameters:)
+      conn.post(uri(path:)) do |req|
         if parameters[:stream].respond_to?(:call)
           req.options.on_data = to_json_stream(user_proc: parameters[:stream])
           parameters[:stream] = true # Necessary to tell OpenRouter to stream.
@@ -17,32 +17,23 @@ module OpenRouter
 
         req.headers = headers
         req.body = parameters.to_json
-      end&.body)
+      end&.body
     end
 
     def multipart_post(path:, parameters: nil)
-      to_json(conn(multipart: true).post(uri(path:)) do |req|
+      conn(multipart: true).post(uri(path:)) do |req|
         req.headers = headers.merge({ "Content-Type" => "multipart/form-data" })
         req.body = multipart_parameters(parameters)
-      end&.body)
+      end&.body
     end
 
     def delete(path:)
-      to_json(conn.delete(uri(path:)) do |req|
+      conn.delete(uri(path:)) do |req|
         req.headers = headers
-      end&.body)
+      end&.body
     end
 
     private
-
-    def to_json(string)
-      return unless string
-
-      JSON.parse(string)
-    rescue JSON::ParserError
-      # Convert a multiline string of JSON objects to a JSON array.
-      JSON.parse(string.gsub("}\n{", "},{").prepend("[").concat("]"))
-    end
 
     # Given a proc, returns an outer proc that can be used to iterate over a JSON stream of chunks.
     # For each chunk, the inner user_proc is called giving it the JSON object. The JSON object could
@@ -66,6 +57,11 @@ module OpenRouter
       Faraday.new do |f|
         f.options[:timeout] = OpenRouter.configuration.request_timeout
         f.request(:multipart) if multipart
+        f.use MiddlewareErrors if @log_errors
+        f.response :raise_error
+        f.response :json
+
+        OpenRouter.configuration.faraday_config&.call(f)
       end
     end
 

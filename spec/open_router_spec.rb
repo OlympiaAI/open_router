@@ -1,17 +1,20 @@
 # frozen_string_literal: true
 
-require "dotenv"
-require "pry"
-
-Dotenv.load
-
 RSpec.describe OpenRouter do
   it "has a version number" do
     expect(OpenRouter::VERSION).not_to be nil
   end
 
   describe OpenRouter::Client do
-    let(:client) { OpenRouter::Client.new(access_token: ENV["ACCESS_TOKEN"]) }
+    let(:client) do
+      OpenRouter::Client.new(access_token: ENV["ACCESS_TOKEN"]) do |config|
+        config.faraday do |f|
+          f.response :logger, ::Logger.new($stdout), { headers: true, bodies: true, errors: true } do |logger|
+            logger.filter(/(Bearer) (\S+)/, '\1[REDACTED]')
+          end
+        end
+      end
+    end
 
     describe "#initialize" do
       it "yields the configuration" do
@@ -25,7 +28,7 @@ RSpec.describe OpenRouter do
 
       it "sends a POST request to the completions endpoint with the correct parameters" do
         # let the call execute
-        expect(client).to receive(:json_post).with(
+        expect(client).to receive(:post).with(
           path: "/chat/completions",
           parameters: {
             model: "mistralai/mistral-7b-instruct:free",

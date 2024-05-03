@@ -63,6 +63,32 @@ Then you can create a client like this:
 client = OpenRouter::Client.new
 ```
 
+#### Configure Faraday
+
+The configuration object exposes a [`faraday`](https://github.com/lostisland/faraday-retry) method that you can pass a block to configure Faraday settings and middleware.
+
+This example adds `faraday-retry` and a logger that redacts the api key so it doesn't get leaked to logs.
+
+```ruby
+require 'faraday/retry'
+
+retry_options = {
+  max: 2,
+  interval: 0.05,
+  interval_randomness: 0.5,
+  backoff_factor: 2
+}
+
+OpenRouter::Client.new(access_token: ENV["ACCESS_TOKEN"]) do |config|
+  config.faraday do |f|
+    f.request :retry, retry_options
+    f.response :logger, ::Logger.new($stdout), { headers: true, bodies: true, errors: true } do |logger|
+      logger.filter(/(Bearer) (\S+)/, '\1[REDACTED]')
+    end
+  end
+end
+```
+
 #### Change version or timeout
 
 The default timeout for any request using this library is 120 seconds. You can change that by passing a number of seconds to the `request_timeout` when initializing the client.
