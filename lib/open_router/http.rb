@@ -72,7 +72,9 @@ module OpenRouter
     def headers
       {
         "Authorization" => "Bearer #{OpenRouter.configuration.access_token}",
-        "Content-Type" => "application/json"
+        "Content-Type" => "application/json",
+        "X-Title" => "OpenRouter Ruby Client",
+        "HTTP-Referer" => "https://github.com/OlympiaAI/open_router"
       }.merge(OpenRouter.configuration.extra_headers)
     end
 
