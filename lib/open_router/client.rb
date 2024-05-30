@@ -42,8 +42,8 @@ module OpenRouter
       parameters.merge!(extras)
 
       post(path: "/chat/completions", parameters:).tap do |response|
-        raise ServerError, "Empty response from OpenRouter. Might be worth retrying once or twice." if response.blank?
-        raise ServerError, response.dig("error", "message") if response.dig("error", "message").present?
+        raise ServerError, response.dig("error", "message") if response.presence&.dig("error", "message").present?
+        raise ServerError, "Empty response from OpenRouter. Might be worth retrying once or twice." if stream.blank? && response.blank?
       end.with_indifferent_access
     end
 
