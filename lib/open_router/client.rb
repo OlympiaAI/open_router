@@ -44,7 +44,9 @@ module OpenRouter
       post(path: "/chat/completions", parameters:).tap do |response|
         raise ServerError, response.dig("error", "message") if response.presence&.dig("error", "message").present?
         raise ServerError, "Empty response from OpenRouter. Might be worth retrying once or twice." if stream.blank? && response.blank?
-      end.with_indifferent_access
+
+        return response.with_indifferent_access if response.is_a?(Hash)
+      end
     end
 
     # Fetches the list of available models from the OpenRouter API.
