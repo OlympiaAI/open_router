@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    open_router (0.3.0)
+    open_router (0.3.1)
       activesupport (>= 6.0)
       dotenv (>= 2)
       faraday (>= 1)
