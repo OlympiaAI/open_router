@@ -47,7 +47,7 @@ require "open_router"
 
 ### Quickstart
 
-Configure the gem with your API keys, for example in an `open_router.rb` initializer file. Never hardcode secrets into your codebase - instead use `Rails.application.credentials` or something like [dotenv](https://github.com/motdotla/dotenv) to pass the keys safely into your environments.
+Configure the gem with your API keys, for example in an `open_router.rb` initializer file. Never hardcode secrets into your codebase - instead use `Rails.application.credentials` or something like [dotenv](https://github.com/bkeepers/dotenv) to pass the keys safely into your environments.
 
 ```ruby
 OpenRouter.configure do |config|
